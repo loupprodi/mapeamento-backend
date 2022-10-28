@@ -28,10 +28,17 @@ public class UsuarioController {
 
     //metodo de buscar o usuario
     @GetMapping("{id}")
-    public Usuario getUsuarioById(@PathVariable Integer id){
-        return usuariosRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Usuario não encontrado"));
+    public ResponseEntity<?> getUsuarioById(@PathVariable Integer id){
+
+        try {
+            Optional<Usuario> user = usuariosRepository.findById(id);
+            if (user.isEmpty()) {
+                return new ResponseEntity<>("Usuário não encontrado.", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //rota de criar o usuario
@@ -58,18 +65,18 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteAllUsers() {
+    public ResponseEntity<?> deleteAllUsers() {
         try {
             usuariosRepository.deleteAll();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // pesquisa de usuário, servirá para a estrutura tbm
     @GetMapping
-    public List<Usuario> find(Usuario filtro ){
+    public List<Usuario> find(Usuario filtro){
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreCase()

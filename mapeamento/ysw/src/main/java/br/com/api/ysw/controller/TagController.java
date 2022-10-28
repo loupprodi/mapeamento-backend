@@ -27,11 +27,25 @@ public class TagController {
     Tags tagsRepository;
 
     @GetMapping("{id}")
-    public Tag getTagById(@PathVariable Integer id, @RequestBody Tag tags) {
+    public Tag getTagById(@PathVariable Integer id) {
         return tagsRepository.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Tag não encontrada"));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getTagByIdEstrutura(@RequestParam("idEstrutura") Integer idEstrutura) {
+        try {
+            List<Tag> tags = tagsRepository.findAllByIdEstrutura(idEstrutura);
+            if (tags.isEmpty()) {
+                return new ResponseEntity<>("Não há tags para essa estrutura", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(tags, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Tag save (@RequestBody Tag tags){

@@ -24,7 +24,8 @@ public class Tag {
   @Column(name = "numSerial")
   private String numSerial;
 
-  @OneToOne(mappedBy = "tag")
+  @ManyToOne
+  @JoinColumn(name = "estrutura_id")
   private Estrutura estrutura;
 
 }

@@ -21,9 +21,4 @@ public class Estrutura {
 
   @Column(name = "descricao")
   private String description;
-
-  @OneToOne
-  @JoinColumn(name = "tag_id")
-  private Tag tag;
-
 }

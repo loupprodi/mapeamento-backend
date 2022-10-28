@@ -50,7 +50,6 @@ public class EstruturaController {
             _estruturas.setName(estruturaDados.get().getName());
             _estruturas.setId(estruturaDados.get().getId());
             _estruturas.setDescription(estruturaDados.get().getDescription());
-            _estruturas.setTag(estruturaDados.get().getTag());
             return new ResponseEntity<>(estruturasRepository.save(_estruturas), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
